@@ -1,0 +1,36 @@
+.TH man 1 "11 Apr 2020" "0.1" "Cascara"
+.SH NAME
+.B cascara
+- greatly simplified version of bash, the GNU Bourne-Again SHell.
+.SH SYNOPSIS
+cascara [command] [args] ...
+.SH DESCRIPTION
+
+
+The second group project for 1st trimester Holberton students learning C, this shell emulates some of the basic functionality of sh() as it appears in standard Linux distros.
+.SH OPTIONS
+.B cascara
+takes several options...
+.PP
+.B type 1:
+behavior
+.PP
+.B type 2:
+behavior
+.SH RETURN VALUE
+Returns 0 on success, or -1 on failure. Errno may also still hold value of last failure.
+.SH BUGS
+Still a few to squash...
+.SH EXAMPLE
+.PP
+.B use case 1
+.br
+Example 1
+.br
+example command 1
+.br
+Output: blah
+.SH SEE ALSO
+.I sh(1)
+.SH AUTHOR
+Cynthia Taylor, Samuel Pomeroy
