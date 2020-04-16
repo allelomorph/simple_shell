@@ -48,9 +48,9 @@ char *get_input(char **my_env)
 
 		free(input);
 
-/*		if (fflush(stdin) != 0)
+		if (fflush(stdin) != 0)
 			perror("get_input: fflush error");
-*/
+
 		return (NULL);
 	}
 	input[read_bytes - 1] = '\0'; /* remove newline char from input */
@@ -116,4 +116,120 @@ int count_tokens(char *input, char *delim)
 /*
  * printf("count_tokens: temp_buf malloc at %p\n", (void *)temp_buf);
  * printf("count_tokens: temp_buf free at %p\n", (void *)temp_buf);
+ */
+
+/**
+ * tokenize - parses a string to return pointers to sub-strings separated by
+ * a given delimiter
+ *
+ * @input: string to parse
+ *
+ * @ac: amount of expected sub-strings
+ *
+ * @delim: delimiter char or string
+ *
+ * @flag: 0 = normal operation, 1 = av[0] intentional placeholder string
+ *
+ * Return: pointer to an array containing char pointers to positions
+ * in input string.
+ */
+
+char **tokenize(char *input, int ac, char *delim, int flag)
+{
+	char **av = NULL;
+	int i;
+
+	if (flag)
+		ac++;
+	av = malloc(sizeof(char *) * (ac + 1));
+	if (!av)
+	{
+		perror("tokenize: malloc error");
+		return (NULL);
+	}
+	for (i = 0; i < ac; i++)
+	{
+		if (flag)
+		{
+			if (i == 0)
+				av[i] = ".";
+			else if (i == 1)
+				av[i] = strtok(input, delim);
+			else
+				av[i] = strtok(NULL, delim);
+		}
+		else if (i == 0)
+		{
+			av[i] = strtok(input, delim);
+			if (!av[i]) /* no mention of errno in strtok man page */
+				return (NULL);
+		}
+		else
+		{
+			av[i] = strtok(NULL, delim);
+			if (!av[i]) /* no mention of errno in strtok man page */
+				return (NULL);
+		}
+	}
+	av[ac] = NULL;
+	return (av);
+}
+
+/*	printf("tokenize: av malloc at %p\n", (void *)av); */
+
+/**
+ * child_exec - forks into child process to execute command in user input
+ * with given args and environment
+ *
+ * @argv: array of args as strings
+ *
+ * @env: array of evironmental variables as strings
+ *
+ * @line: getline input from get_input()
+ *
+ * Return: 0 on success, 1 on failure
+ */
+
+int child_exec(char **argv, char **env, char *line)
+{
+	pid_t pid;
+	int status, rc_retval;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("child_exec: fork error");
+		free(argv);
+		return (1);
+	}
+	if (pid == 0)
+	{
+		rc_retval = run_command(argv, env);
+		if (rc_retval)
+		{
+			if (rc_retval == 1)
+				return (1);
+			free(argv);
+			free(line);
+			str_arr_free(env);
+			_exit(127);
+		}
+	}
+	else
+	{
+		wait(&status);
+		free(argv);
+	}
+
+	return (0);
+}
+
+/*
+ * printf("chlid_exec: argv free at %p\n", (void *)argv);
+ * printf("chlid_exec(child): argv free at %p\n", (void *)argv);
+ * printf("chlid_exec(parent): argv free at %p\n", (void *)argv);
+ * printf("run_command: av free at %p\n", (void *)av);
+ * running execve on setenv + unsetenv with helpers arr_to_nodes
+ * and nodes_to_arr could modify my_env for future loops
+ * perror status?
  */
