@@ -32,26 +32,20 @@ char *get_input(char **my_env)
 		perror("get_input: isatty error");
 
 	read_bytes = getline(&input, &buf_bytes, stdin);
-
 	if (read_bytes == -1)
 	{
+		free(input);
+		str_arr_free(my_env);
+/* getline retval of -1, but errno of 0: EOF char typed */
 		if (errno == 0)
-		{
 			_puts("exit\n");
-			free(input);
-			str_arr_free(my_env);
-			exit(EXIT_SUCCESS);
-		}
 /* ENOTTY: getline errno after last line in non-interactive mode input */
 		else if (errno != ENOTTY)
+		{
 			perror("get_input: getline error");
-
-		free(input);
-
-		if (fflush(stdin) != 0)
-			perror("get_input: fflush error");
-
-		return (NULL);
+			return (NULL);
+		}
+		exit(EXIT_SUCCESS);
 	}
 	input[read_bytes - 1] = '\0'; /* remove newline char from input */
 
@@ -212,6 +206,7 @@ int child_exec(char **argv, char **env, char *line)
 			free(argv);
 			free(line);
 			str_arr_free(env);
+/* 127: reserved exit code for "command not found" */
 			_exit(127);
 		}
 	}

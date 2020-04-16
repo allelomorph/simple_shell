@@ -67,8 +67,7 @@ int run_command(char **av, char **my_env)
 			return (2);
 		}
 	}
-/* valid pathname created with _which, execute it  */
-	else
+	else /* valid pathname created with _which, execute it */
 	{
 		if (execve(abs_path, av, my_env) == -1)
 		{
@@ -106,7 +105,6 @@ int shell_loop(char **my_env)
 		line = get_input(my_env);
 		if (!line)
 			return (-1);
-
 		if (line[0] == '\0') /* getline success, empty command line */
 		{
 			free(line);
@@ -161,8 +159,9 @@ int main(void)
 
 	my_env = str_arr_dup(environ);
 	if (!my_env)
+	{
 		return (-1);
-
+	}
 	retval = shell_loop(my_env);
 
 	str_arr_free(my_env);
