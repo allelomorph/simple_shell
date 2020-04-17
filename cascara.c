@@ -62,8 +62,7 @@ int run_command(char **av, char **my_env)
 		}
 		else
 		{
-			_puts(abs_path);
-			_puts(": command not found\n");
+			perror(abs_path);
 			return (2);
 		}
 	}
@@ -117,10 +116,7 @@ int shell_loop(char **my_env)
 		if (av == NULL)
 			break;
 		if (_strcmp(av[0], exit_cmd) == 0)
-		{
-			_puts("exit\n");
 			break;
-		}
 		if (_strcmp(av[0], env_cmd) == 0)
 		{
 			if (_env(my_env))

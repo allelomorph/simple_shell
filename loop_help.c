@@ -38,9 +38,9 @@ char *get_input(char **my_env)
 		str_arr_free(my_env);
 /* getline retval of -1, but errno of 0: EOF char typed */
 		if (errno == 0)
-			_puts("exit\n");
+			_putchar('\n');
 /* ENOTTY: getline errno after last line in non-interactive mode input */
-		else if (errno != ENOTTY)
+	        else if (errno != ENOTTY)
 		{
 			perror("get_input: getline error");
 			return (NULL);
