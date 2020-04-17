@@ -5,7 +5,7 @@ Cascara is a simple command line interpreter written in C.
 Version 0.2 was built during the COVID-19 pandemic and the "Shelter in Place" order in California, USA.
 
 ## Installation
-GitHub repository [link]
+Cascara can be downloaded from the GitHub repository [simple_shell](https://github.com/cg-taylor/simple_shell)
 
 ## Compilation
 ```c
