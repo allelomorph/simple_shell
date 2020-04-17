@@ -40,7 +40,7 @@ char *get_input(char **my_env)
 		if (errno == 0)
 			_putchar('\n');
 /* ENOTTY: getline errno after last line in non-interactive mode input */
-	        else if (errno != ENOTTY)
+		else if (errno != ENOTTY)
 		{
 			perror("get_input: getline error");
 			return (NULL);
