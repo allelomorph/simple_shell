@@ -1,12 +1,13 @@
 /*
  * This file contains helper functions that process user input.
  *
- * char *get_input(void) - get user input from standard input
- * int count_tokens(char *, char *) - count sub-strings defined by a delimiter
- * char **tokenize(char *, int, char *) - separate sub-strings defined by a
- *         delimiter
- * int child_exec(char *, char **, char **) - execute command in a child
- *         process
+ * char *get_input(char **, char **, int) -- get user input
+ *         from standard input
+ * int count_tokens(char *, char *) -- count sub-strings defined by a delimiter
+ * char **tokenize(char *, int, char *, int) -- separate sub-strings defined by
+ *         a delimiter
+ * int child_exec(char **, char **, char *, int, char *) -- execute command in
+ *         a child process
  */
 
 #include "holberton.h"

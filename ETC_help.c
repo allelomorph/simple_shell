@@ -1,11 +1,11 @@
 /*
  * This file contains additional helper functions for this program
  *
- * int _env(char **my_env); -- prints environment variables
- * int _putchar(char c) -- prints a single character to STDOUT
- * void _puts(char *c) -- uses _putchar to print a string
- * void puts_err - prints custom message to stderr
- * char *uns_itoa - converts unsigned integers to strings
+ * int _env(char **) -- prints environment variables
+ * int _putchar(char) -- prints a single character to STDOUT
+ * void _puts(char *) -- uses _putchar to print a string
+ * void puts_err(char *, int, char *) -- prints custom message to stderr
+ * char *uns_itoa(unsigned int) - converts unsigned integers to strings
  */
 
 #include "holberton.h"
