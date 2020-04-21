@@ -1,3 +1,13 @@
+/*
+ * This file contains the functions related to finding the absolute path
+ *
+ * char *test_path(char **, char *) -- searches through string array paths,
+ *        concatenating paths[i] with '/' + func, testing it for accessibility
+ * char **get_PATH_dir(char *) -- tokenizes PATH value into separate pathnames
+ * char *_which(char *, char **) -- finds pathname for the executable file named
+ *        as argument by searching through all colon delimted paths in PATH
+ */
+
 #include "holberton.h"
 
 /**
@@ -118,8 +128,6 @@ char **get_PATH_dir(char *env_var)
  *
  *      printf("_which: env_var free at %p\n", (void *)env_var);
  */
-
-
 
 /**
  * _which - returns full valid pathname for the executable file named

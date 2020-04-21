@@ -1,14 +1,14 @@
-#include "holberton.h"
-
 /*
- * This file contains the central chell loop and two helpers, along with main.
+ * This file contains the central shell loop and two helpers, along with main.
  *
- * int _strncmp(char *str1, char *str2, unsigned int n) - compares a given
- * amount of bytes between two strings
- * int run_command(char **av, char **my_env) - checks validity of pathname
- * before using child_exec to fork and execute commmand
- * int shell_loop(char **my_env, char *main) - primary user input loop
+ * int _strncmp(char *, char *, unsigned int ) -- compares a given
+ *        amount of bytes between two strings
+ * int run_command(char **, char **) -- checks validity of pathname
+ *        before using child_exec to fork and execute commmand
+ * int shell_loop(char **, char *) -- primary user input loop
  */
+
+#include "holberton.h"
 
 /**
  * _strncmp - compares a given amount of bytes between two strings
