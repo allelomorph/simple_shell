@@ -4,8 +4,8 @@
  * char *test_path(char **, char *) -- searches through string array paths,
  *        concatenating paths[i] with '/' + func, testing it for accessibility
  * char **get_PATH_dir(char *) -- tokenizes PATH value into separate pathnames
- * char *_which(char *, char **) -- finds pathname for the executable file named
- *        as argument by searching through all colon delimted paths in PATH
+ * char *_which(char *, char **) -- finds pathname for the executable file
+ *        named as argument by searching all colon delimted paths in PATH
  */
 
 #include "holberton.h"
