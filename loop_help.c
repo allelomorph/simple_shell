@@ -1,11 +1,11 @@
 /*
  * This file contains helper functions that process user input.
  *
- * char *get_input(void); - get user input from standard input
- * int count_tokens(char *, char *); - count sub-strings defined by a delimiter
- * char **tokenize(char *, int, char *); - separate sub-strings defined by a
+ * char *get_input(void) - get user input from standard input
+ * int count_tokens(char *, char *) - count sub-strings defined by a delimiter
+ * char **tokenize(char *, int, char *) - separate sub-strings defined by a
  *         delimiter
- * int child_exec(char *, char **, char **); - execute command in a child
+ * int child_exec(char *, char **, char **) - execute command in a child
  *         process
  */
 
