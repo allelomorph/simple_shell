@@ -14,16 +14,20 @@
 /**
  * get_input - takes user input from sdtin stream and converts to a string
  *
+ * @av: tokenized getline input
  * @my_env: malloc'd copy of environ
+ * @ce_retval: return value of child_exec from previous loop, if applicable
  *
  * Return: char pointer to string containing user input
  */
 
-char *get_input(char **my_env)
+char *get_input(char **av, char **my_env, int ce_retval)
 {
 	char *input = NULL; /* init or valgrind error */
 	ssize_t read_bytes = 0;
 	size_t buf_bytes = 0; /* must be intialized or segfault on getline */
+
+	(void)av;
 
 	if (isatty(STDIN_FILENO) == 1)
 /* input is from stdin, in interactive mode */
@@ -34,9 +38,13 @@ char *get_input(char **my_env)
 	read_bytes = getline(&input, &buf_bytes, stdin);
 	if (read_bytes == -1)
 	{
-		free(input);
+		if (input)
+		{
+			free(input);
+		}
 		str_arr_free(my_env);
 /* getline retval of -1, but errno of 0: EOF char typed */
+
 		if (errno == 0)
 			_putchar('\n');
 /* ENOTTY: getline errno after last line in non-interactive mode input */
@@ -45,6 +53,9 @@ char *get_input(char **my_env)
 			perror("get_input: getline error");
 			return (NULL);
 		}
+/* exit non-interactive mode with exit value of last line in script */
+		else if (errno == ENOTTY && ce_retval != 0)
+			exit(ce_retval);
 		exit(EXIT_SUCCESS);
 	}
 	input[read_bytes - 1] = '\0'; /* remove newline char from input */
@@ -93,8 +104,9 @@ int count_tokens(char *input, char *delim)
 
 	if (!token)
 	{
+		if (errno != ENOTTY)
+			perror("count_tokens: strtok error");
 		free(temp_buf);
-		perror("count_tokens: strtok error");
 		return (-1);
 	}
 
@@ -170,52 +182,62 @@ char **tokenize(char *input, int ac, char *delim, int flag)
 }
 
 /*	printf("tokenize: av malloc at %p\n", (void *)av); */
+/*	printf("tokenize: av malloc at %p\n", (void *)av); */
 
 /**
  * child_exec - forks into child process to execute command in user input
  * with given args and environment
  *
  * @argv: array of args as strings
- *
  * @env: array of evironmental variables as strings
- *
+ * @main: av[0] of main itself, not getline output
+ * @loop: getline input loop incrementor value
  * @line: getline input from get_input()
  *
  * Return: 0 on success, 1 on failure
  */
 
-int child_exec(char **argv, char **env, char *line)
+int child_exec(char **argv, char **env, char *main, int loop, char *line)
 {
 	pid_t pid;
-	int status, rc_retval;
+	int status = 0, rc_retval;
+	char *nf_msg = "not found\n";
 
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("child_exec: fork error");
 		free(argv);
-		return (1);
+		return (-1);
 	}
 	if (pid == 0)
 	{
 		rc_retval = run_command(argv, env);
-		if (rc_retval)
+		if (rc_retval == 1)
 		{
-			if (rc_retval == 1)
-				return (1);
+			puts_err(main, loop, argv[0]);
+			write(2, nf_msg, _strlen(nf_msg));
 			free(argv);
 			free(line);
 			str_arr_free(env);
-/* 127: reserved exit code for "command not found" */
-			_exit(127);
+			_exit(127); /* 127: exit code "command not found" */
+		}
+		else
+		{
+			free(argv);
+			free(line);
+			str_arr_free(env);
+			_exit(EXIT_FAILURE);
 		}
 	}
 	else
 	{
 		wait(&status);
 		free(argv);
+		status = status >> 8;
+		if (status)
+			return (status);
 	}
-
 	return (0);
 }
 

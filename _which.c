@@ -43,7 +43,6 @@ char *test_path(char **paths, char *func)
 				test[j] = '\0';
 		}
 /* if temp is accessible and executable, stop search to return it */
-/*		printf("paths[%i]: test: %s\n", i, test); */
 		if (access(test, F_OK | X_OK) == 0)
 			return (test);
 		if (errno != ENOENT)
@@ -130,30 +129,32 @@ char **get_PATH_dir(char *env_var)
  *
  * @my_env: previously allocated copy of parent process' environ array
  *
- * Return: string containing full valid path of executable, or NULL on failure
+ * Return: string containing full valid path of executable, original
+ * av[0] if none found, or NULL on failure
  */
 
 char *_which(char *func, char **my_env)
 {
-	char *pth = "PATH", *pwd = "PWD", *test = NULL;
+	char *pth = NULL, *pwd = NULL, *test = NULL;
 	char **paths = NULL;
 	int i;
 
-	if (!func || !my_env)
+	if (!func)
 		return (NULL);
 	for (i = 0; my_env[i]; i++) /* search, get copies of PATH and PWD */
 	{
-		if (_strncmp(my_env[i], pth, 4) == 0)
+		if (_strncmp(my_env[i], "PATH=", 5) == 0)
 			pth = _strdup(my_env[i]);
-		if (_strncmp(my_env[i], pwd, 3) == 0)
+		if (_strncmp(my_env[i], "PWD=", 4) == 0)
 			pwd = _strdup(my_env[i]);
 	}
-	if (!pth || !pwd)
-		return (NULL);
-	if (pth[5] == '\0') /* "PATH=", empty path, return unmodifed func */
+	if (!pth || !pwd || pth[5] == '\0')
+/* "PATH=", empty path, return unmodifed func */
 	{
-		free(pth);
-		free(pwd);
+		if (pth)
+			free(pth);
+		if (pwd)
+			free(pwd);
 		return (func);
 	} /* separate PATH from its value, and then that value into paths */
 	paths = get_PATH_dir(pth);

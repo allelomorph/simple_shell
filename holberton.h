@@ -11,12 +11,12 @@
 
 /* C standard library global variables */
 extern int errno;
-extern char **environ;
+/* extern char **environ; */
 
 /* cascara.c */
 int _strncmp(char *str1, char *str2, unsigned int n);
 int run_command(char **av, char **my_env);
-int shell_loop(char **my_env);
+int shell_loop(char **my_env, char *main);
 
 /* string_help.c */
 int _strlen(char *s);
@@ -26,15 +26,17 @@ char **str_arr_dup(char **array);
 void str_arr_free(char **array);
 
 /* loop_help.c */
-char *get_input(char **my_env);
+char *get_input(char **av, char **my_env, int ce_retval);
 int count_tokens(char *input, char *delim);
 char **tokenize(char *input, int ac, char *delim, int flag);
-int child_exec(char **argv, char **env, char *line);
+int child_exec(char **argv, char **env, char *main, int loop, char *line);
 
 /* ETC_help.c */
 int _env(char **my_env);
 int _putchar(char c);
 void _puts(char *str);
+void puts_err(char *main_arg, int loop, char *func);
+char *uns_itoa(unsigned int dec);
 
 /* _which.c */
 char *test_path(char **paths, char *func);
